@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.ui.category.CategoryFragment"
+        android:label="fragment_category_list"
+        tools:layout="@layout/fragment_category_list" />
+    <fragment
+        android:id="@+id/districtFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.ui.district.DistrictFragment"
+        android:label="fragment_district_list"
+        tools:layout="@layout/fragment_district_list" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+</navigation>
