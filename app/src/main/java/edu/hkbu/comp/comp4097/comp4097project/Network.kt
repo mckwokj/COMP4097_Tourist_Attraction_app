@@ -16,7 +16,7 @@ class Network {
     companion object {
         fun getTextFromNetwork(): String {
             val builder = StringBuilder()
-            val url = "abc"
+            val url = "def"
             Log.d("log", "url: ${url}")
             val connection =
                 URL(url).openConnection() as HttpURLConnection
