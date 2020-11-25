@@ -11,10 +11,12 @@ data class Features(
 ){}
 
 data class Geometry(
-    val coordinates: List<String>
+    val coordinates: List<Double>
 ){}
 
 data class Properties(
     val xid: String,
-    val dist: String
+    val dist: Double,
+    val name: String,
+    val kinds: String,
 ){}

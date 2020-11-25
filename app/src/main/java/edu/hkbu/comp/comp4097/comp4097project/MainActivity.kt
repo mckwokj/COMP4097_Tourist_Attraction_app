@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,8 +18,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import edu.hkbu.comp.comp4097.comp4097project.data.Location
 import edu.hkbu.comp.comp4097.comp4097project.data.Place
-import edu.hkbu.comp.comp4097.comp4097project.data.PlaceDetails
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,8 +67,8 @@ class MainActivity : AppCompatActivity() {
                 // getting the last known or current location
                 Log.d("log", "${location.latitude}")
                 Log.d("log", "${location.longitude}")
-                textView2.text = "Latitude: ${location.latitude}"
-                textView3.text = "Longitude: ${location.longitude}"
+//                textView2.text = "Latitude: ${location.latitude}"
+//                textView3.text = "Longitude: ${location.longitude}"
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed on getting current location",
@@ -96,45 +93,50 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private suspend fun loadDistrictByCoor(){
-    var location: Location
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val json = Network.getDistrictByCoor()
-            Log.d("log", "getDistrictByCoor() called")
-            location = Gson().fromJson<Location>(json,object: TypeToken<Location>() {}.type)
-            Log.d("log", location.address.county)
-        } catch (e: Exception) {
-            Log.d("log", "Error in loadDistrictByCoor")
-        }
-    }
-}
 
-private suspend fun loadNearPlaceByCoor(){
-    var place : Place
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val json = Network.getNearPlaceByCoor()
-            Log.d("log", "getNearPlaceByCoor() called")
-            place = Gson().fromJson<Place>(json,object: TypeToken<Place>() {}.type)
-            Log.d("log", place.features[0].properties.xid)
-        } catch (e: Exception) {
-            Log.d("log", "Error in loadPlaceByCoor")
-        }
-    }
-}
 
-private suspend fun loadDetailInfoById(){
-    var placeDetail : PlaceDetails
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val json = Network.getDetailInfoById()
-            Log.d("log", "getDetailInfoById() called")
-            placeDetail = Gson().fromJson<PlaceDetails>(json,object: TypeToken<PlaceDetails>() {}.type)
-            Log.d("log", placeDetail.name)
-        } catch (e: Exception) {
-            Log.d("log", "Error in loadDetailInfoById")
-        }
-    }
-}
+//private suspend fun loadDistrictByCoor(){
+//    var location: Location
+//    CoroutineScope(Dispatchers.IO).launch {
+//        try {
+//            val json = Network.getDistrictByCoor()
+//            Log.d("log", "getDistrictByCoor() called")
+//            location = Gson().fromJson<Location>(json,object: TypeToken<Location>() {}.type)
+//            Log.d("log", location.address.county)
+//        } catch (e: Exception) {
+//            Log.d("log", "Error in loadDistrictByCoor")
+//        }
+//    }
+//}
+
+//private suspend fun loadNearPlaceByCoor(){
+//    var place : Place
+//    CoroutineScope(Dispatchers.IO).launch {
+//        try {
+//            val json = Network.getNearPlaceByCoor()
+//            Log.d("log", "getNearPlaceByCoor() called")
+//            place = Gson().fromJson<Place>(json,object: TypeToken<Place>() {}.type)
+//            Log.d("log", place.features[0].properties.xid)
+//        } catch (e: Exception) {
+//            Log.d("log", "Error in loadPlaceByCoor")
+//        }
+//    }
+//}
+//
+//private suspend fun loadDetailInfoById(){
+//    var placeDetail : PlaceDetails
+//    CoroutineScope(Dispatchers.IO).launch {
+//        try {
+//            val json = Network.getDetailInfoById()
+//            Log.d("log", "getDetailInfoById() called")
+//            placeDetail = Gson().fromJson<PlaceDetails>(json,object: TypeToken<PlaceDetails>() {}.type)
+//            Log.d("log", placeDetail.name)
+//        } catch (e: Exception) {
+//            Log.d("log", "Error in loadDetailInfoById")
+//        }
+//    }
+//}
+
+
+
 

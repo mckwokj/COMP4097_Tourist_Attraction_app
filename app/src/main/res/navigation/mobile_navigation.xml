@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/categoryFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.category.CategoryFragment"
-        android:label="fragment_category_list"
+        android:label="Find attractions near MTR stations"
         tools:layout="@layout/fragment_category_list" />
     <fragment
         android:id="@+id/districtFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.district.DistrictFragment"
-        android:label="fragment_district_list"
+        android:label="Find attractions near you"
         tools:layout="@layout/fragment_district_list" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="Tourist attractions"
+        tools:layout="@layout/fragment_home_list" />
 </navigation>
