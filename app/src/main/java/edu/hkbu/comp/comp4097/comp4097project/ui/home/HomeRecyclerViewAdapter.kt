@@ -41,19 +41,30 @@ class HomeRecyclerViewAdapter(
         val item = values[position]
 
         // find district
-        CoroutineScope(Dispatchers.IO).launch {
+        val job = CoroutineScope(Dispatchers.IO).launch {
             val detailInfoJson = item.xid?.let { Network.getDetailInfoById(it) }
             val placeDetail = Gson().fromJson<PlaceDetail>(detailInfoJson, object : TypeToken<PlaceDetail>() {}.type)
 
-            item.district = placeDetail.address["county"]
+            item.district = placeDetail?.address?.get("county")
+
+            // use regular expression to capture the english part
+            val pattern = "[A-Za-z\\s]+".toRegex()
+            val match = item.district?.let { pattern.find(it) }
+
+            item.district = match?.value
         }
 
+        CoroutineScope(Dispatchers.Main).launch {
+            // join should be used inside Coroutine
+            job.join()
 //        if (item.image_URL != null) {
 //            Picasso.get().load(item.image_URL).into(holder.imageView)
-        holder.placeText.text = item.name
-        val roundedDistance = item.dist?.times(100)?.let { round(it) / 100 }.toString()
-        holder.districtText.text = "District: ${item.district}, Approximate distance: ${roundedDistance}m"
+            holder.placeText.text = item.name
+            val roundedDistance = item.dist?.times(100)?.let { round(it) / 100 }.toString()
+            holder.districtText.text =
+                "District:${item.district}, Approximate distance: ${roundedDistance}m"
 //        }
+        }
     }
 
     override fun getItemCount(): Int = values.size
