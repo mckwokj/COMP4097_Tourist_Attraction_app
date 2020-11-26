@@ -159,7 +159,5 @@ class Network {
                     ).show()
                 }
         }
-
-
     }
 }

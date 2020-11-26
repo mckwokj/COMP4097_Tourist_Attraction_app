@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+//    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,34 +48,35 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         // initialize fused location client
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getCurrentLocation()
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        Network.getCurrentLocation(this)
 
     }
 
-    private fun getCurrentLocation() {
-        // checking location permission
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // request permission
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE);
-            return
-        }
+//    private fun getCurrentLocation() {
+//        // checking location permission
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // request permission
+//            ActivityCompat.requestPermissions(this,
+//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE);
+//            return
+//        }
+//
+//        fusedLocationClient.lastLocation
+//            .addOnSuccessListener { location ->
+//                // getting the last known or current location
+//                Log.d("log", "${location.latitude}")
+//                Log.d("log", "${location.longitude}")
+////                textView2.text = "Latitude: ${location.latitude}"
+////                textView3.text = "Longitude: ${location.longitude}"
+//            }
+//            .addOnFailureListener {
+//                Toast.makeText(this, "Failed on getting current location",
+//                    Toast.LENGTH_SHORT).show()
+//            }
+//    }
 
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                // getting the last known or current location
-                Log.d("log", "${location.latitude}")
-                Log.d("log", "${location.longitude}")
-//                textView2.text = "Latitude: ${location.latitude}"
-//                textView3.text = "Longitude: ${location.longitude}"
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed on getting current location",
-                    Toast.LENGTH_SHORT).show()
-            }
-    }
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {

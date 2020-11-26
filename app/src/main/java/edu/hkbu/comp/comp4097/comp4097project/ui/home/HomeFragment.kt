@@ -51,9 +51,10 @@ class HomeFragment : Fragment() {
 //                adapter = HomeRecyclerViewAdapter(DummyContent.ITEMS)
 //            }
 //        }
-        CoroutineScope(Dispatchers.IO).launch {
-            Network.getCurrentLocation(requireContext())
-        }
+
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Network.getCurrentLocation(requireContext())
+//        }
 
         val pref: SharedPreferences = context?.getSharedPreferences(
             "placeInfo",
@@ -85,9 +86,11 @@ class HomeFragment : Fragment() {
         }
 
         if (homeFragmentJson != null) {
-//            Log.d("abc", homeFragmentJson)
+            Log.d("log", "homeFragmentJson: ${homeFragmentJson.toString()}")
             val place = Gson().fromJson<Place>(homeFragmentJson, object : TypeToken<Place>() {}.type)
             val placeList: MutableList<PlaceInfo>? = mutableListOf()
+
+            Log.d("log", "placeList: ${placeList.toString()}")
 
             place.features.forEach {
 //                Log.d("xid", it.properties.xid)
