@@ -67,11 +67,11 @@ class Network {
             return builder.toString()
         }
 
-        fun getNearPlaceByCoor(radius: Int = 100, lat: Double, lon: Double): String {
+        fun getNearPlaceByCoor(radius: Int = 500, lat: Double, lon: Double, limit: Int = 5): String {
 //        fun getNearPlaceByCoor(): String {
             val builder = StringBuilder()
             val url =
-                "https://api.opentripmap.com/0.1/en/places/radius?radius=${radius}&lon=${lon}&lat=${lat}&country=HK&apikey=5ae2e3f221c38a28845f05b6865192295a39e19c4e9125c9e0d55d14"
+                "https://api.opentripmap.com/0.1/en/places/radius?radius=${radius}&lon=${lon}&lat=${lat}&country=HK&limit=${limit}&apikey=5ae2e3f221c38a28845f05b6865192295a39e19c4e9125c9e0d55d14"
 //                "https://api.opentripmap.com/0.1/en/places/radius?radius=150&lon=113.964371&lat=22.388563&country=HK&apikey=5ae2e3f221c38a28845f05b6865192295a39e19c4e9125c9e0d55d14"
             Log.d("log", "url: ${url}")
             val connection =
