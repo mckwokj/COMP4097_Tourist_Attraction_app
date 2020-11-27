@@ -32,6 +32,6 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.DetailFragment"
-        android:label="fragment_detail"
+        android:label="Tourist attraction detail"
         tools:layout="@layout/fragment_detail" />
 </navigation>

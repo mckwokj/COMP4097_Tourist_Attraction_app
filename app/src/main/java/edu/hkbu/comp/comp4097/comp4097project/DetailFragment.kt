@@ -9,6 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import edu.hkbu.comp.comp4097.comp4097project.data.AppDatabase
+import edu.hkbu.comp.comp4097.comp4097project.data.Place
+import edu.hkbu.comp.comp4097.comp4097project.data.PlaceInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.round
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,27 +44,57 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
 
-        val attractionName = arguments?.getString("placeText")
-        val image_URL = arguments?.getString("imageURL")
-        val districtText = arguments?.getString("districtText")
-        val description = arguments?.getString("description")
 
-        val imageView: ImageView = view.findViewById(R.id.detailImageView)
-        val placeTextView: TextView = view.findViewById(R.id.detailPlaceText)
-        val descTextView: TextView = view.findViewById(R.id.detailDescText)
-        val districtTextView: TextView = view.findViewById(R.id.detailDistrictText)
+        val xid = arguments?.getString("xid", "")
+        var place: PlaceInfo? = null
 
-        Picasso.get().load(image_URL).into(imageView)
-        placeTextView.text = attractionName
-        districtTextView.text = districtText
-        descTextView.text = description
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            val dao = AppDatabase.getInstance(requireContext()).placeDao()
+
+            if (xid != null) {
+                place = dao.findPlaceByXid(xid)
+                Log.d("DetailFragment", place.toString())
+            }
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            job.join()
+            val imageView: ImageView = view.findViewById(R.id.detailImageView)
+            val placeTextView: TextView = view.findViewById(R.id.detailPlaceText)
+            val descTextView: TextView = view.findViewById(R.id.detailDescText)
+            val districtTextView: TextView = view.findViewById(R.id.detailDistrictText)
+
+            val image_URL = place?.image_URL
+            val attractionName = place?.name
+            val districtText = place?.district
+            val description = place?.description
+            val roundedDistance = place?.dist?.times(100)?.let { round(it) / 100 }.toString()
+
+            Picasso.get().load(image_URL).into(imageView)
+            placeTextView.text = attractionName
+            districtTextView.text = "District:${districtText}\nApproximate distance: " +
+                    "${roundedDistance}m"
+            descTextView.text = "Description:${description}"
+
+//            if (image_URL != null) {
+//                Log.d("DetailFragment", image_URL)
+//            }
+//            if (attractionName != null) {
+//                Log.d("DetailFragment", attractionName)
+//            }
+//            if (districtText != null) {
+//                Log.d("DetailFragment", districtText)
+//            }
+//            if (description != null) {
+//                Log.d("DetailFragment", description)
+//            }
 
 //        if (attractionName != null) {
 //            Log.d("DetailFragment", attractionName)
 //        }
+        }
 
         // Inflate the layout for this fragment
         return view
