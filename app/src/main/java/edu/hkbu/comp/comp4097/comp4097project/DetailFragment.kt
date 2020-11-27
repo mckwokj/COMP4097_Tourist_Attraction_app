@@ -1,10 +1,14 @@
 package edu.hkbu.comp.comp4097.comp4097project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +37,30 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val view = inflater.inflate(R.layout.fragment_detail, container, false)
+
+        val attractionName = arguments?.getString("placeText")
+        val image_URL = arguments?.getString("imageURL")
+        val districtText = arguments?.getString("districtText")
+        val description = arguments?.getString("description")
+
+        val imageView: ImageView = view.findViewById(R.id.detailImageView)
+        val placeTextView: TextView = view.findViewById(R.id.detailPlaceText)
+        val descTextView: TextView = view.findViewById(R.id.detailDescText)
+        val districtTextView: TextView = view.findViewById(R.id.detailDistrictText)
+
+        Picasso.get().load(image_URL).into(imageView)
+        placeTextView.text = attractionName
+        districtTextView.text = districtText
+        descTextView.text = description
+
+//        if (attractionName != null) {
+//            Log.d("DetailFragment", attractionName)
+//        }
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        return view
     }
 
     companion object {

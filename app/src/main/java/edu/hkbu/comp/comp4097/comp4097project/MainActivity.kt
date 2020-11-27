@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,11 @@ class MainActivity : AppCompatActivity() {
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         Network.getCurrentLocation(this)
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        findNavController(R.id.nav_host_fragment).popBackStack()
+        return true
     }
 
 //    private fun getCurrentLocation() {

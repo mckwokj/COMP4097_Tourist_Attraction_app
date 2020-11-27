@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
                     name = it.properties.name,
                     coordinates = it.geometry.coordinates,
                     xid = it.properties.xid, dist = it.properties.dist, kinds = it.properties.kinds,
-                    image_URL = null, district = null
+                    image_URL = null, district = null, description = null
                 ))
             }
             recyclerView.adapter = placeList?.let { HomeRecyclerViewAdapter(it) }

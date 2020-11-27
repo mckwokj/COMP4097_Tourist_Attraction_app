@@ -7,5 +7,6 @@ data class PlaceInfo(
     val dist: Double?,
     val kinds: String?,
     var image_URL: String?,
-    var district: String?
+    var district: String?,
+    var description: String?
 )
