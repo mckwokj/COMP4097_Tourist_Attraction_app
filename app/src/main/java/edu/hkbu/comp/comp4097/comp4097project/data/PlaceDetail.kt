@@ -4,6 +4,7 @@ data class PlaceDetail (
     val xid: String,
     val name: String,
     val address: Map<String, String>,
-    val image: String?,
+//    val image: String?,
+    val preview: Map<String, String>,
     val info: Map<String, String>?
 )

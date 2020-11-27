@@ -45,7 +45,14 @@ class HomeRecyclerViewAdapter(
             val detailInfoJson = item.xid?.let { Network.getDetailInfoById(it) }
             val placeDetail = Gson().fromJson<PlaceDetail>(detailInfoJson, object : TypeToken<PlaceDetail>() {}.type)
 
+            if (placeDetail?.preview != null) {
+//                placeDetail.preview["source"]?.let { Log.d("preview", it) }
+                item.image_URL = placeDetail.preview["source"]
+            }
+
             item.district = placeDetail?.address?.get("county")
+//            item.image_URL = placeDetail.image
+//            item.image_URL = placeDetail.image
 
             // use regular expression to capture the english part
             val pattern = "[A-Za-z\\s]+".toRegex()
@@ -57,13 +64,13 @@ class HomeRecyclerViewAdapter(
         CoroutineScope(Dispatchers.Main).launch {
             // join should be used inside Coroutine
             job.join()
-//        if (item.image_URL != null) {
-//            Picasso.get().load(item.image_URL).into(holder.imageView)
+        if (item.image_URL != null) {
+            Picasso.get().load(item.image_URL).into(holder.imageView)
             holder.placeText.text = item.name
             val roundedDistance = item.dist?.times(100)?.let { round(it) / 100 }.toString()
             holder.districtText.text =
-                "District:${item.district}, Approximate distance: ${roundedDistance}m"
-//        }
+                "District:${item.district}\nApproximate distance: ${roundedDistance}m"
+        }
         }
     }
 

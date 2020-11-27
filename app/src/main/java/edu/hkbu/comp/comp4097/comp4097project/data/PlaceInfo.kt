@@ -6,6 +6,6 @@ data class PlaceInfo(
     val xid: String?,
     val dist: Double?,
     val kinds: String?,
-    val image_URL: String?,
+    var image_URL: String?,
     var district: String?
 )

@@ -24,5 +24,14 @@
         android:id="@+id/homeFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.home.HomeFragment"
         android:label="Tourist attractions"
-        tools:layout="@layout/fragment_home_list" />
+        tools:layout="@layout/fragment_home_list" >
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" />
 </navigation>
