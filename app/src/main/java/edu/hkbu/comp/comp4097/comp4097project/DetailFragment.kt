@@ -89,6 +89,53 @@ class DetailFragment : Fragment() {
             val mapBtn: Button = view.findViewById(R.id.mapBtn)
             val shareBtn: Button = view.findViewById(R.id.shareBtn)
             val calendarBtn: Button = view.findViewById(R.id.calendarBtn)
+            val facilityBtn: Button = view.findViewById(R.id.facilityBtn)
+
+
+            facilityBtn.setOnClickListener {
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Choose a facility")
+                    .setItems(
+                        arrayOf("Restaurant", "Toilet", "Convenience store"),
+                        DialogInterface.OnClickListener { dialog, which ->
+                            // The 'which' argument contains the index position
+                            // of the selected item
+                            var gmmIntentUri: Uri? = null
+
+                            if (which == 0) {
+//                                Log.d("Mode", "Driving is clicked")
+                                gmmIntentUri =
+                                Uri.parse("geo:${place?.lat},${place?.lon}?q=restaurants")
+
+                            } else if (which == 1){
+//                                Log.d("Mode", "Walking is clicked")
+                                gmmIntentUri =
+                                    Uri.parse("geo:${place?.lat},${place?.lon}?q=toilets")
+                            } else {
+                                gmmIntentUri =
+                                    Uri.parse("geo:${place?.lat},${place?.lon}?q=${Uri.encode("convenience store")}")
+                            }
+
+                            // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+
+                            // Make the Intent explicit by setting the Google Maps package
+                            mapIntent.setPackage("com.google.android.apps.maps")
+
+                            val packageManager = requireActivity().packageManager
+
+                            // verify that at least one app that can handle the intent
+                            mapIntent.resolveActivity(packageManager)?.let {
+                                // Attempt to start an activity that can handle the Intent
+                                startActivity(mapIntent)
+                            }
+                        })
+                    .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+                        Log.d("Mode", "Cancel is clicked")
+                        dialog.cancel()
+                    })
+                builder.show()
+            }
 
             calendarBtn.setOnClickListener{
                 val calendarIntent = Intent(Intent.ACTION_INSERT)

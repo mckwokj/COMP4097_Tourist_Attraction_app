@@ -59,6 +59,13 @@
                 android:text="Save" />
 
             <Button
+                android:id="@+id/facilityBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nearby facilities" />
+
+            <Button
                 android:id="@+id/mapBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

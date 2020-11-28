@@ -49,7 +49,7 @@ class MapsFragment : Fragment() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Choose a navigation mode")
                 .setItems(
-                    arrayOf("Driving", "Walking"),
+                    arrayOf("Driving", "Walking", "Show street view"),
                     DialogInterface.OnClickListener { dialog, which ->
                         // The 'which' argument contains the index position
                         // of the selected item
@@ -60,10 +60,12 @@ class MapsFragment : Fragment() {
                             gmmIntentUri =
                                 Uri.parse("google.navigation:q=${lat},${lon}&mode=d")
 
-                        } else {
+                        } else if (which == 1){
 //                                Log.d("Mode", "Walking is clicked")
                             gmmIntentUri =
                                 Uri.parse("google.navigation:q=${lat},${lon}&mode=w")
+                        } else {
+                            gmmIntentUri = Uri.parse("google.streetview:cbll=${lat},${lon}")
                         }
 
                         // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
