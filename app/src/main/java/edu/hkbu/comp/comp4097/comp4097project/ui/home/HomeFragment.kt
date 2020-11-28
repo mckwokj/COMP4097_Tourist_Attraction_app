@@ -107,34 +107,36 @@ class HomeFragment : Fragment() {
                             object : TypeToken<PlaceDetail>() {}.type
                         )
 
-                        if (placeDetail?.preview != null) {
+                        // only place with wiki and image can be stored
+                        if (placeDetail?.preview != null && placeDetail?.wikipedia_extracts != null) {
 //                placeDetail.preview["source"]?.let { Log.d("preview", it) }
                             image_URL = placeDetail.preview["source"]
-                        }
+//                        }
 
-                        if (placeDetail?.wikipedia_extracts != null) {
+//                        if (placeDetail?.wikipedia_extracts != null) {
                             placeDetail.wikipedia_extracts["text"]?.let { Log.d("preview", it) }
                             description = placeDetail.wikipedia_extracts["text"]
-                        }
+//                        }
 
-                        district = placeDetail?.address?.get("county")
+                            district = placeDetail?.address?.get("county")
 
-                        // use regular expression to capture the english part
-                        val pattern = "[A-Za-z\\s]+".toRegex()
-                        val match = district?.let { pattern.find(it) }
+                            // use regular expression to capture the english part
+                            val pattern = "[A-Za-z\\s]+".toRegex()
+                            val match = district?.let { pattern.find(it) }
 
-                        district = match?.value
+                            district = match?.value
 
-                        // place image_URL, description, district into a map whose element will be
-                        // stored into PlaceInfo object
-                        if (detailInfoMap != null) {
-                            placeDetail.xid?.let { it1 ->
-                                detailInfoMap.put(
-                                    it1,
-                                    listOf(image_URL, description, district) as List<String>
-                                )
+                            // place image_URL, description, district into a map whose element will be
+                            // stored into PlaceInfo object
+                            if (detailInfoMap != null) {
+                                placeDetail.xid?.let { it1 ->
+                                    detailInfoMap.put(
+                                        it1,
+                                        listOf(image_URL, description, district) as List<String>
+                                    )
+                                }
+                                Log.d("map", detailInfoMap.toString())
                             }
-                            Log.d("map", detailInfoMap.toString())
                         }
                     }
                 }
@@ -148,6 +150,9 @@ class HomeFragment : Fragment() {
 //                    Log.d("delete-after", dao.findAllPlaces().toString())
 
                     place.features.forEach {
+                        val result = detailInfoMap?.filter { it2 -> it2.key == it.properties.xid }
+                        // places with empty result mean no place image and wiki description
+                        if (!result!!.isEmpty())
                         dao.insert(
                             PlaceInfo(
                                 name = it.properties.name,

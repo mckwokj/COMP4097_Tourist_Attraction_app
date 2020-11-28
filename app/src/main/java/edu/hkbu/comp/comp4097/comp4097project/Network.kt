@@ -67,7 +67,7 @@ class Network {
             return builder.toString()
         }
 
-        fun getNearPlaceByCoor(radius: Int = 500, lat: Double, lon: Double, limit: Int = 5): String {
+        fun getNearPlaceByCoor(radius: Int = 500, lat: Double, lon: Double, limit: Int = 20): String {
 //        fun getNearPlaceByCoor(): String {
             val builder = StringBuilder()
             val url =

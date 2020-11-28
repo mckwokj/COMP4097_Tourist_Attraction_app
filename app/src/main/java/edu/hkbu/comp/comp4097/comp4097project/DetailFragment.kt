@@ -124,11 +124,12 @@ class DetailFragment : Fragment() {
 
                             val packageManager = requireActivity().packageManager
 
+                            Log.d("packageManager", packageManager.toString())
                             // verify that at least one app that can handle the intent
-                            mapIntent.resolveActivity(packageManager)?.let {
+//                            mapIntent.resolveActivity(packageManager)?.let {
                                 // Attempt to start an activity that can handle the Intent
                                 startActivity(mapIntent)
-                            }
+//                            }
                         })
                     .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
                         Log.d("Mode", "Cancel is clicked")

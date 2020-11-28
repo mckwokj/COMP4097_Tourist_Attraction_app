@@ -65,6 +65,7 @@ class MapsFragment : Fragment() {
                             gmmIntentUri =
                                 Uri.parse("google.navigation:q=${lat},${lon}&mode=w")
                         } else {
+//                            Log.d("Mode", "Show street view is clicked")
                             gmmIntentUri = Uri.parse("google.streetview:cbll=${lat},${lon}")
                         }
 
@@ -77,10 +78,10 @@ class MapsFragment : Fragment() {
                         val packageManager = requireActivity().packageManager
 
                         // verify that at least one app that can handle the intent
-                        mapIntent.resolveActivity(packageManager)?.let {
+//                        mapIntent.resolveActivity(packageManager)?.let {
                             // Attempt to start an activity that can handle the Intent
                             startActivity(mapIntent)
-                        }
+//                        }
                     })
                 .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
                     Log.d("Mode", "Cancel is clicked")
