@@ -11,7 +11,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_user.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,6 +64,28 @@ class userFragment : Fragment() {
 
         userView.showUserBtn.setOnClickListener{
             Toast.makeText(activity, FirebaseAuth.getInstance().currentUser.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        userView.myPlaceBtn.setOnClickListener {
+            val db = FirebaseFirestore.getInstance()
+
+//            db.collection("news").addSnapshotListener { value, error ->
+            db.collection("test@test.com").addSnapshotListener { value, error ->
+                value?.let {
+//                    CoroutineScope(Dispatchers.Main).launch {
+//                        recyclerView.adapter = NewsRecyclerViewAdapter(
+                            it.documents.map { doc ->
+//                            Log.d ("log", "${doc.getString("title")!!}")
+                                val result:List<Int> = (doc.get("xid") as List<Int>?)!!
+                                result.forEach {
+                                    Log.d ("log", "${it}")
+                                    Log.d ("log", "next")
+                                }
+                            }
+//                        )
+//                    }
+                }
+            }
         }
 
 
