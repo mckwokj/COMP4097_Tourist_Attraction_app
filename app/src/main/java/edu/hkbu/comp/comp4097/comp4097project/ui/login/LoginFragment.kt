@@ -1,5 +1,7 @@
 package edu.hkbu.comp.comp4097.comp4097project.ui.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.annotation.StringRes
@@ -15,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.navigation.findNavController
 
 import edu.hkbu.comp.comp4097.comp4097project.R
 
@@ -106,8 +109,12 @@ class LoginFragment : Fragment() {
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome) + model.displayName
         // TODO : initiate successful logged in experience
+        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        sharedPreferences.edit().putString("loginState", "login").apply()
+        sharedPreferences.edit().putString("userName", model.displayName.toString()).apply()
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+        view?.findNavController()?.navigate(R.id.action_loginFragment_to_userFragment)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

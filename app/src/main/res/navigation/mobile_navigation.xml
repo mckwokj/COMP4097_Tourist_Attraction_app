@@ -9,7 +9,11 @@
         android:id="@+id/loginFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.login.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
     <fragment
         android:id="@+id/categoryFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.category.CategoryFragment"
@@ -51,6 +55,18 @@
         <action
             android:id="@+id/action_userFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_userFragment_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.logoutFragment"
+        android:label="Logout"
+        tools:layout="@layout/fragment_logout" >
+        <action
+            android:id="@+id/action_logoutFragment_to_userFragment"
+            app:destination="@id/userFragment" />
     </fragment>
 
 </navigation>
