@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/userFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -43,4 +43,14 @@
         android:name="edu.hkbu.comp.comp4097.comp4097project.MapsFragment"
         android:label="Map"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="edu.hkbu.comp.comp4097.comp4097project.userFragment"
+        android:label="User functions"
+        tools:layout="@layout/fragment_user" >
+        <action
+            android:id="@+id/action_userFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
 </navigation>
