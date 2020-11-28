@@ -19,15 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#040303" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#040303"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/districtText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/tertiary_text_dark"
+        android:textStyle="italic" />
 
     <View
         android:id="@+id/divider"
