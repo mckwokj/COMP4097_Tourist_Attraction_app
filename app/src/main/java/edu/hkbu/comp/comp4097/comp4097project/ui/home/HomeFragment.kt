@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import edu.hkbu.comp.comp4097.comp4097project.Network
@@ -46,6 +48,31 @@ class HomeFragment : Fragment() {
         val recyclerView =
             inflater.inflate(R.layout.fragment_home_list, container, false) as RecyclerView
 
+//        val pref: SharedPreferences = context?.getSharedPreferences(
+//            "placeInfo",
+//            Context.MODE_PRIVATE
+//        )!!
+
+//        reloadData(recyclerView)
+
+        val swipeLayout = SwipeRefreshLayout(requireContext())
+
+        swipeLayout.addView(recyclerView)
+
+        swipeLayout.setOnRefreshListener {
+            swipeLayout.isRefreshing = true
+            reloadData(recyclerView)
+            swipeLayout.isRefreshing = false
+        }
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        reloadData(recyclerView)
+
+        return swipeLayout
+    }
+
+    private fun reloadData(recyclerView: RecyclerView) {
+
         val pref: SharedPreferences = context?.getSharedPreferences(
             "placeInfo",
             Context.MODE_PRIVATE
@@ -58,6 +85,7 @@ class HomeFragment : Fragment() {
                 val loadingDialog = LoadingDialog(context as Activity)
                 loadingDialog.startLoadingDialog()
                 Log.d("log", "homeFragmentJson: ${homeFragmentJson.toString()}")
+
                 val place =
                     Gson().fromJson<Place>(homeFragmentJson, object : TypeToken<Place>() {}.type)
                 var placeList: List<PlaceInfo>? = listOf()
@@ -114,6 +142,11 @@ class HomeFragment : Fragment() {
                 val job2 = CoroutineScope(Dispatchers.IO).launch {
                     job.join()
                     val dao = AppDatabase.getInstance(requireContext()).placeDao()
+
+//                    Log.d("delete-before", dao.findAllPlaces().toString())
+                    dao.deleteAllPlaces()
+//                    Log.d("delete-after", dao.findAllPlaces().toString())
+
                     place.features.forEach {
                         dao.insert(
                             PlaceInfo(
@@ -141,8 +174,6 @@ class HomeFragment : Fragment() {
                 loadingDialog.dismissDialog()
             }
         }
-
-        return recyclerView
     }
 
     companion object {

@@ -10,6 +10,8 @@ interface PlaceDao {
     suspend fun findPlaceByXid(xid: String): PlaceInfo
     @Query("Select * from PlaceInfo")
     suspend fun findAllPlaces(): List<PlaceInfo>
+    @Query("Delete from PlaceInfo")
+    suspend fun deleteAllPlaces()
     @Delete
     suspend fun delete(vararg place: PlaceInfo)
     @Update

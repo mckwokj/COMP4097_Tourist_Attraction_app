@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -86,6 +87,27 @@ class DetailFragment : Fragment() {
             descTextView.text = "Description:${description}"
 
             val mapBtn: Button = view.findViewById(R.id.mapBtn)
+            val shareBtn: Button = view.findViewById(R.id.shareBtn)
+            val calendarBtn: Button = view.findViewById(R.id.calendarBtn)
+
+            calendarBtn.setOnClickListener{
+                val calendarIntent = Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.Events.TITLE, "Visit ${place?.name}")
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, place?.name)
+
+                startActivity(calendarIntent)
+            }
+
+            shareBtn.setOnClickListener{
+                val shareIntent: Intent = Intent(Intent.ACTION_SEND)
+                shareIntent.setType("text/plain")
+                val shareSub = "Checkout this tourist attraction"
+                val shareBody = "Place: ${place?.name}\nDistrict:${districtText}\n${descTextView.text}"
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub)
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+                startActivity(Intent.createChooser(shareIntent, "Share using"))
+            }
 
             mapBtn.setOnClickListener {
 
