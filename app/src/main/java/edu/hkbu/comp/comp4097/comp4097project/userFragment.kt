@@ -13,9 +13,7 @@ import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_user.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,25 +65,19 @@ class userFragment : Fragment() {
         }
 
         userView.myPlaceBtn.setOnClickListener {
-            val db = FirebaseFirestore.getInstance()
 
-//            db.collection("news").addSnapshotListener { value, error ->
-            db.collection("test@test.com").addSnapshotListener { value, error ->
-                value?.let {
-//                    CoroutineScope(Dispatchers.Main).launch {
-//                        recyclerView.adapter = NewsRecyclerViewAdapter(
-                            it.documents.map { doc ->
-//                            Log.d ("log", "${doc.getString("title")!!}")
-                                val result:List<Int> = (doc.get("xid") as List<Int>?)!!
-                                result.forEach {
-                                    Log.d ("log", "${it}")
-                                    Log.d ("log", "next")
-                                }
-                            }
-//                        )
-//                    }
-                }
+            CoroutineScope(Dispatchers.IO).launch {
+                loadUserLike()
             }
+
+        }
+
+        userView.addPlaceBtn.setOnClickListener {
+
+            CoroutineScope(Dispatchers.IO).launch {
+                writeUserLike(5)
+            }
+
         }
 
 
@@ -110,4 +102,58 @@ class userFragment : Fragment() {
                 }
             }
     }
+
+    suspend fun loadUserLike(): MutableList<Int>?{
+        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        var userName = sharedPreferences.getString("userName", "")
+
+        val db = FirebaseFirestore.getInstance()
+        var result : MutableList<Int>? = null
+        val docRef = db.collection("userLikeData").document(userName!!)
+        var stopLoop = false
+
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        result = (document.get("xid") as MutableList<Int>?)!!
+                        Log.d("log", "DocumentSnapshot data: ${result}")
+                        stopLoop = true
+                    } else {
+                        Log.d("log", "No such document")
+                        stopLoop = true
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("log", "get failed with ", exception)
+                    stopLoop = true
+                }
+
+        while (stopLoop == false){
+            delay(1)
+        }
+
+        return result
+    }
+
+        suspend fun writeUserLike(xidAdd: Int){
+        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        var userName = sharedPreferences.getString("userName", "")
+
+        val db = FirebaseFirestore.getInstance()
+
+        var newLikeXid:MutableList<Int> = loadUserLike()!!
+        newLikeXid.add(xidAdd)
+        Log.d("log", "newLikeXid: ${newLikeXid}")
+
+        val field = hashMapOf(
+            "xid" to newLikeXid
+        )
+
+        db.collection("userLikeData").document(userName!!)
+            .set(field)
+            .addOnSuccessListener { Log.d("log", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w("log", "Error writing document", e) }
+    }
+
+
 }

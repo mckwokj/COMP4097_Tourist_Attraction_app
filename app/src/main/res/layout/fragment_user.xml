@@ -67,5 +67,14 @@
             app:layout_constraintHorizontal_bias="0.533"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logBtn" />
+
+        <Button
+            android:id="@+id/addPlaceBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="addPlace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/showUserBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
