@@ -3,26 +3,21 @@ package edu.hkbu.comp.comp4097.comp4097project
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import edu.hkbu.comp.comp4097.comp4097project.data.Place
-import edu.hkbu.comp.comp4097.comp4097project.data.PlaceDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.net.HttpCookie
 import java.net.HttpURLConnection
 import java.net.URL
+
 
 class Network {
     companion object {
@@ -156,10 +151,18 @@ class Network {
                     }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(
-                        context, "Failed on getting current location",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        AlertDialog.Builder(context)
+                            .setTitle("Initial setting completed")
+                            .setMessage("Please restart again.")
+                            .setNeutralButton("OK") { dialog, which ->
+                                System.exit(0)
+                            }.show()
+//                    Toast.makeText(
+//                        context, "Failed on getting current location",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+                    }
                 }
         }
 

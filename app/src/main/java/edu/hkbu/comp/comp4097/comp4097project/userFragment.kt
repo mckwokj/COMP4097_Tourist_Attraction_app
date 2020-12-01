@@ -75,7 +75,7 @@ class userFragment : Fragment() {
         userView.myPlaceBtn.setOnClickListener {
             var result: MutableList<String>? = null
             val job = CoroutineScope(Dispatchers.IO).launch {
-                result = loadUserLike()
+                    result = loadUserLike()
             }
             CoroutineScope(Dispatchers.Main).launch {
                 job.join()

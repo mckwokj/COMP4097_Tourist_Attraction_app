@@ -14,40 +14,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import edu.hkbu.comp.comp4097.comp4097project.data.Location
-import edu.hkbu.comp.comp4097.comp4097project.data.Place
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
 //    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    // Create an English-German translator:
-//    val options = FirebaseTranslatorOptions.Builder()
-//        .setSourceLanguage(FirebaseTranslateLanguage.EN)
-//        .setTargetLanguage(FirebaseTranslateLanguage.DE)
-//        .build()
-//
-//    val options2 = FirebaseTranslatorOptions.Builder()
-//        .setSourceLanguage(FirebaseTranslateLanguage.EN)
-//        .setTargetLanguage(FirebaseTranslateLanguage.ZH)
-//        .build()
-//
-//    val options3 = FirebaseTranslatorOptions.Builder()
-//        .setSourceLanguage(FirebaseTranslateLanguage.EN)
-//        .setTargetLanguage(FirebaseTranslateLanguage.FR)
-//        .build()
-//
-//    val englishGermanTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options)
-//    val englishChineseTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options2)
-//    val englishChneseTranslator = FirebaseNaturalLanguage.getInstance().getTranslator(options3)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,25 +32,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.homeFragment, R.id.categoryFragment, R.id.distanceFragment, R.id.loginFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-//        englishGermanTranslator.downloadModelIfNeeded()
-//            .addOnSuccessListener {
-//                // Model downloaded successfully. Okay to start translating.
-//                // (Set a flag, unhide the translation UI, etc.)
-//                englishGermanTranslator.translate("I am a boy")
-//                    .addOnSuccessListener { translatedText ->
-//                        // Translation successful.
-//                        Log.d("translated", translatedText)
-//                    }
-//                    .addOnFailureListener { exception ->
-//                        // Error.
-//                        // ...
-//                    }
-//            }
-//            .addOnFailureListener { exception ->
-//                // Model couldn’t be downloaded or other internal error.
-//                // ...
-//            }
 
         Network.getCurrentLocation(this)
 

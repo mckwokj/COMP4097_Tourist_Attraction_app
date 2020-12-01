@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import edu.hkbu.comp.comp4097.comp4097project.data.AppDatabase
 import edu.hkbu.comp.comp4097.comp4097project.data.PlaceInfo
+import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -60,6 +61,10 @@ class DetailFragment : Fragment() {
         val xid = arguments?.getString("xid", "")
         var place: PlaceInfo? = null
 
+        val sharedPreferences: SharedPreferences? =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+        var userName = sharedPreferences?.getString("userName", "")
+
         val job = CoroutineScope(Dispatchers.IO).launch {
             val dao = AppDatabase.getInstance(requireContext()).placeDao()
 
@@ -97,7 +102,8 @@ class DetailFragment : Fragment() {
             var userSavedXid: MutableList<String>? = mutableListOf()
 
             val job = CoroutineScope(Dispatchers.IO).launch {
-                userSavedXid = loadUserLike()
+                if (userName != "")
+                    userSavedXid = loadUserLike()
             }
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -111,7 +117,8 @@ class DetailFragment : Fragment() {
             saveBtn.setOnClickListener {
                 if (saveBtn.text != "REMOVE") {
                     CoroutineScope(Dispatchers.IO).launch {
-                        writeUserLike(xid!!)
+                        if (userName != "")
+                            writeUserLike(xid!!)
                     }
                 }else{
                     Log.d("log", "Remove btn click")
