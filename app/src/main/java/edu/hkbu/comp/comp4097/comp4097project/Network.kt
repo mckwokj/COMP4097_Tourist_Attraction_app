@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -67,7 +68,7 @@ class Network {
             return builder.toString()
         }
 
-        fun getNearPlaceByCoor(radius: Int = 500, lat: Double, lon: Double, limit: Int = 20): String {
+        fun getNearPlaceByCoor(radius: Int = 500, lat: Double, lon: Double, limit: Int = 5): String {
 //        fun getNearPlaceByCoor(): String {
             val builder = StringBuilder()
             val url =
@@ -161,5 +162,6 @@ class Network {
                     ).show()
                 }
         }
+
     }
 }

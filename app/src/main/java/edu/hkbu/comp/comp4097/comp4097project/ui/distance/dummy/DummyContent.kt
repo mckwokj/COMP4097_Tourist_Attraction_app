@@ -1,4 +1,4 @@
-package edu.hkbu.comp.comp4097.comp4097project.ui.district.dummy
+package edu.hkbu.comp.comp4097.comp4097project.ui.distance.dummy
 
 import java.util.ArrayList
 import java.util.HashMap

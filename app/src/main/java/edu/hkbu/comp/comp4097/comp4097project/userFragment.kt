@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,34 +41,53 @@ class userFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val userView = inflater.inflate(R.layout.fragment_user, container, false)
-        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        val sharedPreferences: SharedPreferences =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
         var loginState = sharedPreferences.getString("loginState", "")
         var userName = sharedPreferences.getString("userName", "")
 
         if (loginState == "login") {
             userView.userNameTextView.text = userName
-        }else{
+        } else {
             userView.userNameTextView.text = "Not yet login"
         }
 
         userView.logBtn.setOnClickListener {
             if (loginState == "login") {
                 it.findNavController().navigate(
-                    R.id.action_userFragment_to_logoutFragment)
-            }else{
+                    R.id.action_userFragment_to_logoutFragment
+                )
+            } else {
                 it.findNavController().navigate(
-                    R.id.action_userFragment_to_loginFragment)
+                    R.id.action_userFragment_to_loginFragment
+                )
             }
         }
 
-        userView.showUserBtn.setOnClickListener{
-            Toast.makeText(activity, FirebaseAuth.getInstance().currentUser.toString(), Toast.LENGTH_SHORT).show()
+        userView.showUserBtn.setOnClickListener {
+            Toast.makeText(
+                activity,
+                FirebaseAuth.getInstance().currentUser.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         userView.myPlaceBtn.setOnClickListener {
-
-            CoroutineScope(Dispatchers.IO).launch {
-                loadUserLike()
+            var result: MutableList<String>? = null
+            val job = CoroutineScope(Dispatchers.IO).launch {
+                result = loadUserLike()
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                job.join()
+                if (result != null) {
+                    Log.d("log", "loadUserLike result: ${result}")
+                    val sharedPreferences2 =
+                        activity?.getSharedPreferences("placeInfo", Context.MODE_PRIVATE)
+                    sharedPreferences2?.edit()?.putString("requestPage", "myPlace")?.apply()
+                    it.findNavController().navigate(
+                        R.id.action_userFragment_to_rangeFragment
+                    )
+                }
             }
 
         }
@@ -75,7 +95,7 @@ class userFragment : Fragment() {
         userView.addPlaceBtn.setOnClickListener {
 
             CoroutineScope(Dispatchers.IO).launch {
-                writeUserLike(5)
+                writeUserLike("testing string")
             }
 
         }
@@ -103,47 +123,54 @@ class userFragment : Fragment() {
             }
     }
 
-    suspend fun loadUserLike(): MutableList<Int>?{
-        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+    suspend fun loadUserLike(): MutableList<String>? {
+        val sharedPreferences: SharedPreferences =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
         var userName = sharedPreferences.getString("userName", "")
 
         val db = FirebaseFirestore.getInstance()
-        var result : MutableList<Int>? = null
+        var result: MutableList<String>? = null
         val docRef = db.collection("userLikeData").document(userName!!)
         var stopLoop = false
 
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        result = (document.get("xid") as MutableList<Int>?)!!
-                        Log.d("log", "DocumentSnapshot data: ${result}")
-                        stopLoop = true
-                    } else {
-                        Log.d("log", "No such document")
-                        stopLoop = true
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("log", "get failed with ", exception)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    result = (document.get("xid") as MutableList<String>?)
+                    Log.d("log", "DocumentSnapshot data: ${result}")
+                    stopLoop = true
+                } else {
+                    Log.d("log", "No such document")
                     stopLoop = true
                 }
-
-        while (stopLoop == false){
+            }
+            .addOnFailureListener { exception ->
+                Log.d("log", "get failed with ", exception)
+                stopLoop = true
+            }
+        while (stopLoop == false) {
             delay(1)
         }
 
         return result
     }
 
-        suspend fun writeUserLike(xidAdd: Int){
-        val sharedPreferences: SharedPreferences = context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+    suspend fun writeUserLike(xidAdd: String) {
+        val sharedPreferences: SharedPreferences =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
         var userName = sharedPreferences.getString("userName", "")
 
         val db = FirebaseFirestore.getInstance()
+        var newLikeXid: MutableList<String>? = null
 
-        var newLikeXid:MutableList<Int> = loadUserLike()!!
-        newLikeXid.add(xidAdd)
-        Log.d("log", "newLikeXid: ${newLikeXid}")
+        if (loadUserLike() != null) {
+            newLikeXid = loadUserLike()!!
+            newLikeXid.add(xidAdd)
+            Log.d("log", "newLikeXid: ${newLikeXid}")
+        } else {
+            newLikeXid = mutableListOf(xidAdd)
+            Log.d("log", "newLikeXid: ${newLikeXid}")
+        }
 
         val field = hashMapOf(
             "xid" to newLikeXid

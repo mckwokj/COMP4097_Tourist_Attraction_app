@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         reloadData(recyclerView)
-
+        Log.d("log","Home fragment reload called")
         return swipeLayout
     }
 

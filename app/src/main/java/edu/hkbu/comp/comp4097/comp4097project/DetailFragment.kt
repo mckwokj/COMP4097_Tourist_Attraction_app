@@ -1,8 +1,10 @@
 package edu.hkbu.comp.comp4097.comp4097project
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.CalendarContract
@@ -16,11 +18,13 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import edu.hkbu.comp.comp4097.comp4097project.data.AppDatabase
 import edu.hkbu.comp.comp4097.comp4097project.data.PlaceInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.round
 
@@ -53,8 +57,6 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
-
-
         val xid = arguments?.getString("xid", "")
         var place: PlaceInfo? = null
 
@@ -90,7 +92,46 @@ class DetailFragment : Fragment() {
             val shareBtn: Button = view.findViewById(R.id.shareBtn)
             val calendarBtn: Button = view.findViewById(R.id.calendarBtn)
             val facilityBtn: Button = view.findViewById(R.id.facilityBtn)
+            val saveBtn: Button = view.findViewById(R.id.saveBtn)
 
+            var userSavedXid: MutableList<String>? = mutableListOf()
+
+            val job = CoroutineScope(Dispatchers.IO).launch {
+                userSavedXid = loadUserLike()
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                job.join()
+                if (userSavedXid?.contains(xid)!!) {
+                    Log.d("log", "xid contain in userSavedXid: ${xid}")
+                    saveBtn.text = "REMOVE"
+                }
+            }
+
+            saveBtn.setOnClickListener {
+                if (saveBtn.text != "REMOVE") {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        writeUserLike(xid!!)
+                    }
+                }else{
+                    Log.d("log", "Remove btn click")
+                    userSavedXid?.remove(xid)
+
+                    val sharedPreferences: SharedPreferences =
+                        context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+                    var userName = sharedPreferences.getString("userName", "")
+                    val db = FirebaseFirestore.getInstance()
+
+                    val field = hashMapOf(
+                        "xid" to userSavedXid
+                    )
+
+                    db.collection("userLikeData").document(userName!!)
+                        .set(field)
+                        .addOnSuccessListener { Log.d("log", "DocumentSnapshot successfully written!") }
+                        .addOnFailureListener { e -> Log.w("log", "Error writing document", e) }
+                }
+            }
 
             facilityBtn.setOnClickListener {
                 val builder = AlertDialog.Builder(context)
@@ -247,5 +288,64 @@ class DetailFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    suspend fun loadUserLike(): MutableList<String>? {
+        val sharedPreferences: SharedPreferences =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        var userName = sharedPreferences.getString("userName", "")
+
+        val db = FirebaseFirestore.getInstance()
+        var result: MutableList<String>? = null
+        val docRef = db.collection("userLikeData").document(userName!!)
+        var stopLoop = false
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    result = (document.get("xid") as MutableList<String>?)
+                    Log.d("log", "DocumentSnapshot data: ${result}")
+                    stopLoop = true
+                } else {
+                    Log.d("log", "No such document")
+                    stopLoop = true
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("log", "get failed with ", exception)
+                stopLoop = true
+            }
+        while (stopLoop == false) {
+            delay(1)
+        }
+
+        return result
+    }
+
+    suspend fun writeUserLike(xidAdd: String) {
+        val sharedPreferences: SharedPreferences =
+            context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)!!
+        var userName = sharedPreferences.getString("userName", "")
+
+        val db = FirebaseFirestore.getInstance()
+        var newLikeXid: MutableList<String>? = null
+
+        if (loadUserLike() != null) {
+            newLikeXid = loadUserLike()!!
+            newLikeXid.add(xidAdd)
+            Log.d("log", "newLikeXid: ${newLikeXid}")
+        } else {
+            newLikeXid = mutableListOf(xidAdd)
+            Log.d("log", "newLikeXid: ${newLikeXid}")
+        }
+
+        val field = hashMapOf(
+            "xid" to newLikeXid
+        )
+
+        db.collection("userLikeData").document(userName!!)
+            .set(field)
+            .addOnSuccessListener { Log.d("log", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w("log", "Error writing document", e) }
     }
 }

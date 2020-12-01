@@ -8,6 +8,8 @@ interface PlaceDao {
     suspend fun insert(place: PlaceInfo)
     @Query("Select * from PlaceInfo where xid = :xid")
     suspend fun findPlaceByXid(xid: String): PlaceInfo
+    @Query("Select * from PlaceInfo where dist <= :dist")
+    suspend fun findXidByDist(dist: Int): List<PlaceInfo>
     @Query("Select * from PlaceInfo")
     suspend fun findAllPlaces(): List<PlaceInfo>
     @Query("Delete from PlaceInfo")

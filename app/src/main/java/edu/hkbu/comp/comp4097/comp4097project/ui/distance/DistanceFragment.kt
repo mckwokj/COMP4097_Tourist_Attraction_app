@@ -1,5 +1,6 @@
-package edu.hkbu.comp.comp4097.comp4097project.ui.district
+package edu.hkbu.comp.comp4097.comp4097project.ui.distance
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -9,12 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import edu.hkbu.comp.comp4097.comp4097project.R
-import edu.hkbu.comp.comp4097.comp4097project.ui.district.dummy.DummyContent
+import edu.hkbu.comp.comp4097.comp4097project.ui.distance.dummy.DummyContent
 
 /**
  * A fragment representing a list of Items.
  */
-class DistrictFragment : Fragment() {
+class DistanceFragment : Fragment() {
 
     private var columnCount = 1
 
@@ -30,7 +31,7 @@ class DistrictFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_district_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_distance_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -39,7 +40,11 @@ class DistrictFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = DistrictRecyclerViewAdapter(DummyContent.ITEMS)
+                val sharedPreferences = activity?.getSharedPreferences("placeInfo", Context.MODE_PRIVATE)
+                sharedPreferences?.edit()?.putString("requestPage", "distanceFragment")?.apply()
+
+                val distanceList: List<String> = listOf("100 metres", "200 metres", "300 metres", "400 metres", "500 metres")
+                adapter = DistanceRecyclerViewAdapter(distanceList)
             }
         }
         return view
@@ -53,7 +58,7 @@ class DistrictFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            DistrictFragment().apply {
+            DistanceFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
