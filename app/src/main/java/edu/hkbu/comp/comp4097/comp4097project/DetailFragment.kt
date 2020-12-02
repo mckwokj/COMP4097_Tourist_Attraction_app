@@ -131,7 +131,8 @@ class DetailFragment : Fragment() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 Toast.makeText(activity, "Adding successful!", Toast.LENGTH_SHORT)
                                     .show()
-                                fragmentManager?.popBackStack()
+//                                fragmentManager?.popBackStack()
+                                view.findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
                             }
                         }else{
                             CoroutineScope(Dispatchers.Main).launch {
@@ -161,7 +162,8 @@ class DetailFragment : Fragment() {
                     CoroutineScope(Dispatchers.Main).launch {
                         Toast.makeText(activity, "Remove successful!", Toast.LENGTH_SHORT)
                             .show()
-                        fragmentManager?.popBackStack()
+//                        fragmentManager?.popBackStack()
+                        view.findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
                     }
                 }
             }
