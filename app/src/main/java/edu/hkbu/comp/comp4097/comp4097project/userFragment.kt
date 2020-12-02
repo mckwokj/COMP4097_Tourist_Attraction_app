@@ -64,42 +64,58 @@ class userFragment : Fragment() {
             }
         }
 
-        userView.showUserBtn.setOnClickListener {
-            Toast.makeText(
-                activity,
-                FirebaseAuth.getInstance().currentUser.toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
         userView.myPlaceBtn.setOnClickListener {
+            if (loginState == "login") {
             var result: MutableList<String>? = null
             val job = CoroutineScope(Dispatchers.IO).launch {
                     result = loadUserLike()
             }
             CoroutineScope(Dispatchers.Main).launch {
                 job.join()
-                if (result != null) {
+                if (result != null ) {
+                    if (result!!.size != 0){
                     Log.d("log", "loadUserLike result: ${result}")
                     val sharedPreferences2 =
                         activity?.getSharedPreferences("placeInfo", Context.MODE_PRIVATE)
                     sharedPreferences2?.edit()?.putString("requestPage", "myPlace")?.apply()
                     it.findNavController().navigate(
                         R.id.action_userFragment_to_rangeFragment
-                    )
+                    )}else{
+                        CoroutineScope(Dispatchers.Main).launch {
+                            Toast.makeText(activity, "Not record found!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }else{
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(activity, "Not record found!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }}else{
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(activity, "Not yet login!", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
         }
 
-        userView.addPlaceBtn.setOnClickListener {
+//        userView.showUserBtn.setOnClickListener {
+//            Toast.makeText(
+//                activity,
+//                FirebaseAuth.getInstance().currentUser.toString(),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                writeUserLike("testing string")
-            }
-
-        }
-
+//        userView.addPlaceBtn.setOnClickListener {
+//
+//            CoroutineScope(Dispatchers.IO).launch {
+//                writeUserLike("testing string")
+//            }
+//
+//        }
 
         return userView
     }

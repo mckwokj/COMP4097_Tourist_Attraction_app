@@ -78,7 +78,7 @@
     <fragment
         android:id="@+id/rangeFragment"
         android:name="edu.hkbu.comp.comp4097.comp4097project.ui.range.RangeFragment"
-        android:label="fragment_range_list"
+        android:label="List of target place"
         tools:layout="@layout/fragment_range_list" >
         <action
             android:id="@+id/action_rangeFragment_to_detailFragment"

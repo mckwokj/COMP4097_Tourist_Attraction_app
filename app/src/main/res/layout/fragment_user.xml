@@ -35,8 +35,8 @@
 
         <Button
             android:id="@+id/logBtn"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="160dp"
+            android:layout_height="70dp"
             android:layout_marginTop="28dp"
             android:text="Login / Logout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,22 +45,9 @@
             app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
         <Button
-            android:id="@+id/showUserBtn"
-            android:layout_width="84dp"
-            android:layout_height="67dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="20dp"
-            android:text="show stat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/logBtn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
-
-        <Button
             android:id="@+id/myPlaceBtn"
-            android:layout_width="100dp"
-            android:layout_height="39dp"
+            android:layout_width="160dp"
+            android:layout_height="70dp"
             android:layout_marginTop="20dp"
             android:text="My Place"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,13 +55,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logBtn" />
 
-        <Button
-            android:id="@+id/addPlaceBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="addPlace"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/showUserBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

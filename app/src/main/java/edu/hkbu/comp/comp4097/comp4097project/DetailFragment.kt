@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -64,6 +65,10 @@ class DetailFragment : Fragment() {
         val sharedPreferences: SharedPreferences? =
             context?.getSharedPreferences("userInfo", Context.MODE_PRIVATE)
         var userName = sharedPreferences?.getString("userName", "")
+        var loginState = sharedPreferences?.getString("loginState", "")
+
+        val sharedPreferences2 = activity?.getSharedPreferences("placeInfo", Context.MODE_PRIVATE)
+        var requestPage = sharedPreferences2?.getString("requestPage", "")
 
         val job = CoroutineScope(Dispatchers.IO).launch {
             val dao = AppDatabase.getInstance(requireContext()).placeDao()
@@ -101,24 +106,39 @@ class DetailFragment : Fragment() {
 
             var userSavedXid: MutableList<String>? = mutableListOf()
 
-            val job = CoroutineScope(Dispatchers.IO).launch {
-                if (userName != "")
+            if (loginState == "login") {
+                val job = CoroutineScope(Dispatchers.IO).launch {
                     userSavedXid = loadUserLike()
-            }
+                }
 
-            CoroutineScope(Dispatchers.Main).launch {
-                job.join()
-                if (userSavedXid?.contains(xid)!!) {
-                    Log.d("log", "xid contain in userSavedXid: ${xid}")
-                    saveBtn.text = "REMOVE"
+                CoroutineScope(Dispatchers.Main).launch {
+                    job.join()
+                    if (userSavedXid != null) {
+                        if (userSavedXid?.contains(xid)!!) {
+                            Log.d("log", "xid contain in userSavedXid: ${xid}")
+                            saveBtn.text = "REMOVE"
+                        }
+                    }
                 }
             }
 
             saveBtn.setOnClickListener {
                 if (saveBtn.text != "REMOVE") {
                     CoroutineScope(Dispatchers.IO).launch {
-                        if (userName != "")
+                        if (loginState == "login") {
                             writeUserLike(xid!!)
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(activity, "Adding successful!", Toast.LENGTH_SHORT)
+                                    .show()
+                                fragmentManager?.popBackStack()
+                            }
+                        }else{
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(activity, "Not yet login!", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
                     }
                 }else{
                     Log.d("log", "Remove btn click")
@@ -137,6 +157,12 @@ class DetailFragment : Fragment() {
                         .set(field)
                         .addOnSuccessListener { Log.d("log", "DocumentSnapshot successfully written!") }
                         .addOnFailureListener { e -> Log.w("log", "Error writing document", e) }
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(activity, "Remove successful!", Toast.LENGTH_SHORT)
+                            .show()
+                        fragmentManager?.popBackStack()
+                    }
                 }
             }
 
