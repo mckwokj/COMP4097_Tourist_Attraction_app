@@ -94,8 +94,14 @@ class DetailFragment : Fragment() {
 
             Picasso.get().load(image_URL).into(imageView)
             placeTextView.text = attractionName
-            districtTextView.text = "District:${districtText}\nApproximate distance: " +
-                    "${roundedDistance}m"
+
+            if (roundedDistance == "-1.0") {
+                districtTextView.text = "District:${districtText}\nThis place is really far from you."
+            } else {
+                districtTextView.text = "District:${districtText}\nApproximate distance: " +
+                        "${roundedDistance}m"
+            }
+
             descTextView.text = "Description:${description}"
 
             val mapBtn: Button = view.findViewById(R.id.mapBtn)

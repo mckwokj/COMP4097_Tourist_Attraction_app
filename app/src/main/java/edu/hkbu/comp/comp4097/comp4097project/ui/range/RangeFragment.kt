@@ -13,8 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import edu.hkbu.comp.comp4097.comp4097project.Network
 import edu.hkbu.comp.comp4097.comp4097project.R
 import edu.hkbu.comp.comp4097.comp4097project.data.AppDatabase
+import edu.hkbu.comp.comp4097.comp4097project.data.PlaceDetail
 import edu.hkbu.comp.comp4097.comp4097project.data.PlaceInfo
 import edu.hkbu.comp.comp4097.comp4097project.ui.range.dummy.DummyContent
 import kotlinx.coroutines.CoroutineScope
@@ -84,7 +88,44 @@ class RangeFragment : Fragment() {
                             xidList!!.forEach {
                                 val place = dao.findPlaceByXid(it)
                                 Log.d("log","place from findPlaceByXid: ${place} ")
-                                placeList!!.add(place)
+                                if (place != null) {
+                                    placeList!!.add(place)
+                                } else {
+                                    val detailInfoJson = Network.getDetailInfoById(it)
+                                    val placeDetail = Gson().fromJson<PlaceDetail>(
+                                        detailInfoJson,
+                                        object : TypeToken<PlaceDetail>() {}.type
+                                    )
+
+                                    val image_URL = placeDetail.preview?.get("source")
+                                    placeDetail.wikipedia_extracts?.get("text")
+                                        ?.let { Log.d("preview", it) }
+                                    val description = placeDetail.wikipedia_extracts?.get("text")
+                                    var district = placeDetail?.address?.get("county")
+
+                                    // use regular expression to capture the english part
+                                    val pattern = "[A-Za-z\\s]+".toRegex()
+                                    val match = district?.let { pattern.find(it) }
+
+                                    district = match?.value
+
+                                    dao.insert(
+                                        PlaceInfo(
+                                            name = placeDetail.name,
+                                            lat = placeDetail.point?.get("lat"),
+                                            lon = placeDetail.point?.get("lon"),
+                                            xid = placeDetail.xid!!,
+                                            dist = -1.0,
+                                            kinds = "",
+                                            image_URL = image_URL,
+                                            description = description,
+                                            district = district,
+                                        )
+                                    )
+
+                                    val place = dao.findPlaceByXid(it)
+                                    placeList!!.add(place)
+                                }
                             }
                             CoroutineScope(Dispatchers.Main).launch {
                                 adapter = RangeRecyclerViewAdapter(placeList!!)
